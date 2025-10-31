@@ -1,22 +1,14 @@
-import bodyParser from "body-parser";
-import express from "express";
 const net = require('net');
 const WebSocket = require('ws');
+const express = require('express');
 const http = require('http');
 
 const logcb = (...args) => console.log.bind(console, new Date().toISOString(), ...args);
 const errcb = (...args) => console.error.bind(console, new Date().toISOString(), ...args);
 
+const port = process.env.PORT || 3000;
+
 const app = express();
-const port = process.env.PORT || 3333;
-
-app.use(bodyParser.json());
-app.use(bodyParser.raw({ type: "application/vnd.custom-type" }));
-app.use(bodyParser.text({ type: "text/html" }));
-
-app.get("/", async (req, res) => {
-  res.json({ Hello: "World" });
-});
 
 const server = http.createServer(app);
 
@@ -57,6 +49,10 @@ wss.on('connection', (ws, req) => {
     }).on('error', errcb('WebSocket Error:'));
 
     ws.on('close', logcb('Connection closed with', `${clientIP}:${clientPort}`));
+});
+
+app.get('*', (req, res) => {
+    res.send(`<html><body><pre>Hello World</pre></body></html>`);
 });
 
 server.listen(port, () => {
