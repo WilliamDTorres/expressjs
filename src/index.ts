@@ -4,6 +4,9 @@ const net = require('net');
 const WebSocket = require('ws');
 const http = require('http');
 
+const logcb = (...args) => console.log.bind(console, new Date().toISOString(), ...args);
+const errcb = (...args) => console.error.bind(console, new Date().toISOString(), ...args);
+
 const app = express();
 const port = process.env.PORT || 3333;
 
